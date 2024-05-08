@@ -19,4 +19,10 @@ function r.write(content, path)
     file:write(content)
 end
 
+function r.getInput()
+    local line = io.read()
+    return line
+end
+
+
 return r
