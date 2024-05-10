@@ -1,5 +1,5 @@
-local fh = require("io")
-local proc = require("process")
+local fh = require("inout")
+local proc = require("processString")
 
 local continue = true
 
@@ -31,13 +31,22 @@ local function outputToUser(stat)
     end
 end
 
+local function processCommand(content)
+end
+
 while continue do
-    local input = fh.read "timetrack.txt"
-    local ret = prepare(input)
-    input = ret.content
+    local fileContent = fh.read "timetrack.txt"
+    local ret = prepare(fileContent)
+    fileContent = ret.content
 
     outputToUser(ret.status)
+    local input = fh.getInput()
+
+    if #input == 0 then
+	break
+    elseif #input == 1 then
+	processCommand(input)
+    end
 
 
-    break
 end
