@@ -1,8 +1,6 @@
 local fh = require("inout")
 local proc = require("processString")
 
-local continue = true
-
 local status = { NEWFILE = 0, TIMEMISSING = 1, TIMEADDED = 2 }
 
 local function prepare(content)
@@ -10,7 +8,7 @@ local function prepare(content)
     if #content == 0 then
 	r.status = status.NEWFILE
     else
-	proc.removeNewLineChar(content)
+	content = proc.removeNewLineChar(content)
 	if proc.timeAlreadyAdded(content) then
 	    r.status = status.TIMEADDED
 	else
@@ -27,14 +25,27 @@ local function outputToUser(stat)
     elseif stat == status.TIMEMISSING then
 	print("Start new project\ts:Stop\ta:Abort")
     elseif stat == status.TIMEADDED then
-	print("Start new project\td:Delete")
+	print("Start new project\td:Delete last")
     end
 end
 
-local function processCommand(content)
+local function commandOk(input, stat)
+    if stat == status.TIMEMISSING and ( input == "s" or input == "a" ) then
+	return true
+    elseif stat == status.TIMEADDED and input == "d" then
+	return true
+    end
+    return false
 end
 
-while continue do
+local function processCommand(input, content)
+    if input == "d" then
+	content = proc.deleteLastProject(content)
+    end
+    return content
+end
+
+while true do
     local fileContent = fh.read "timetrack.txt"
     local ret = prepare(fileContent)
     fileContent = ret.content
@@ -45,8 +56,11 @@ while continue do
     if #input == 0 then
 	break
     elseif #input == 1 then
-	processCommand(input)
+	if commandOk(input, ret.status) then
+	    fileContent = processCommand(input, fileContent)
+	else
+	    print("Wrong input\n")
+	end
     end
-
-
+    fh.write(fileContent, "timetrack.txt")
 end

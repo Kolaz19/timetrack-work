@@ -1,3 +1,13 @@
+local function findLast(string, toFind)
+    local i = string:match(".*"..toFind.."()")
+    if i == nil then
+	return nil
+    else
+	return i - 1
+    end
+end
+
+
 return {
 
     removeNewLineChar = function(content)
@@ -13,11 +23,21 @@ return {
 
     timeAlreadyAdded = function(content)
 	for var = 1, 10 do
-	    if string.sub(content,var * -1) ~= ' ' then
-		return false
-	    elseif string.sub(content,var * -1) == ']' then
+	    if string.sub(content,var * -1) == ']' then
 		return true
+	    elseif string.sub(content,var * -1) ~= ' ' then
+		return false
 	    end
+	end
+    end,
+
+    deleteLastProject = function(content)
+	local index = findLast(content, '\n')
+	--Check if first line
+	if index == nil then
+	    return ""
+	else
+	    return content:sub(1, index)
 	end
     end
 

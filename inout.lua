@@ -17,6 +17,7 @@ function r.write(content, path)
 	return nil
     end
     file:write(content)
+    file:close()
 end
 
 function r.getInput()
