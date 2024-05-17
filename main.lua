@@ -61,6 +61,9 @@ while true do
 	else
 	    print("Wrong input\n")
 	end
+    else
+	--fileContent = proc.endProject(fileContent)
+	--fileContent = proc.addProject(fileContent, input)
     end
     fh.write(fileContent, "timetrack.txt")
 end

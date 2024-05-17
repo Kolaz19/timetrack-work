@@ -2,7 +2,7 @@ local r = {}
 
 
 function r.read(path)
-    local file = io.open(path, "rb")
+    local file = io.open(path, "r")
     if not file then
 	return nil
     end
