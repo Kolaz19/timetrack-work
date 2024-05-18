@@ -68,7 +68,7 @@ return {
 
 	local timeDiff = (endTime.hour * 60 + endTime.min) - (startTime.hour * 60 + startTime.min)
 
-	return content.." ["..timeDiff.."]\n"
+	return content.." ["..timeDiff.."]"
     end
 
 }

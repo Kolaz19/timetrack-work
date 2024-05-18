@@ -45,10 +45,23 @@ local function processCommand(input, content)
     return content
 end
 
+local function processNewProject(ret, userInput)
+    if ret.status == status.NEWFILE then
+	ret.content = proc.addProject(ret.content, userInput)
+    elseif ret.status == status.TIMEMISSING then
+	ret.content = proc.endProject(ret.content)
+	ret.content = ret.content.."\n"
+	ret.content = proc.addProject(ret.content, userInput)
+    elseif ret.status == status.TIMEADDED then
+	ret.content = ret.content.."\n"
+	ret.content = proc.addProject(ret.content, userInput)
+    end
+    return ret.content
+end
+
 while true do
     local fileContent = fh.read "timetrack.txt"
     local ret = prepare(fileContent)
-    fileContent = ret.content
 
     outputToUser(ret.status)
     local input = fh.getInput()
@@ -57,13 +70,12 @@ while true do
 	break
     elseif #input == 1 then
 	if commandOk(input, ret.status) then
-	    fileContent = processCommand(input, fileContent)
+	    ret.content = processCommand(input, ret.content)
 	else
 	    print("Wrong input\n")
 	end
     else
-	--fileContent = proc.endProject(fileContent)
-	--fileContent = proc.addProject(fileContent, input)
+	ret.content = processNewProject(ret, input)
     end
-    fh.write(fileContent, "timetrack.txt")
+    fh.write(ret.content, "timetrack.txt")
 end
