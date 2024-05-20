@@ -39,8 +39,10 @@ local function commandOk(input, stat)
 end
 
 local function processCommand(input, content)
-    if input == "d" then
+    if input == "d" or input == "a" then
 	content = proc.deleteLastProject(content)
+    elseif input == "s" then
+	content = proc.endProject(content)
     end
     return content
 end
