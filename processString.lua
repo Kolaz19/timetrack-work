@@ -1,3 +1,4 @@
+---@diagnostic disable: param-type-mismatch
 local function findLast(string, toFind)
     local i = string:match(".*"..toFind.."()")
     if i == nil then
@@ -69,6 +70,21 @@ return {
 	local timeDiff = (endTime.hour * 60 + endTime.min) - (startTime.hour * 60 + startTime.min)
 
 	return content.." ["..timeDiff.."]"
+    end,
+
+    changeProjectText = function(content, newName)
+	local index = findLast(content, ']')
+	--Check if project is finished
+	if string.sub(content,index-3, index-3) ~= ':' then
+	    local indexStartDuration = findLast(content, '%[')
+	    local duration = string.sub(content,indexStartDuration,index)
+	    --Ignore duration and go back to start time
+	    index = findLast(content:sub(1,indexStartDuration-1), ']')
+	    return content:sub(1, index).." "..newName.." "..duration
+	else
+	    return content:sub(1, index).." "..newName
+	end
+
     end
 
 }

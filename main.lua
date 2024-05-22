@@ -23,16 +23,16 @@ local function outputToUser(stat)
     if stat == status.NEWFILE then
 	print("Start new project")
     elseif stat == status.TIMEMISSING then
-	print("Start new project\ts:Stop\ta:Abort")
+	print("Start new project\ts:Stop\ta:Abort\tc:Change")
     elseif stat == status.TIMEADDED then
-	print("Start new project\td:Delete last")
+	print("Start new project\td:Delete last\tc:Change last")
     end
 end
 
 local function commandOk(input, stat)
-    if stat == status.TIMEMISSING and ( input == "s" or input == "a" ) then
+    if stat == status.TIMEMISSING and ( input == "s" or input == "a" or input == "c" ) then
 	return true
-    elseif stat == status.TIMEADDED and input == "d" then
+    elseif stat == status.TIMEADDED and ( input == "d" or input == "c" ) then
 	return true
     end
     return false
@@ -43,6 +43,8 @@ local function processCommand(input, content)
 	content = proc.deleteLastProject(content)
     elseif input == "s" then
 	content = proc.endProject(content)
+    elseif input == "c" then
+	content = proc.changeProjectText(content, fh.getInput())
     end
     return content
 end
