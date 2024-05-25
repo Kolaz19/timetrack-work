@@ -34,6 +34,8 @@ local function commandOk(input, stat)
 	return true
     elseif stat == status.TIMEADDED and ( input == "d" or input == "c" ) then
 	return true
+    elseif input == "p" then
+	return true
     end
     return false
 end
@@ -45,6 +47,9 @@ local function processCommand(input, content)
 	content = proc.endProject(content)
     elseif input == "c" then
 	content = proc.changeProjectText(content, fh.getInput())
+    --hidden functions
+    elseif input == "p" then
+	print(content)
     end
     return content
 end
