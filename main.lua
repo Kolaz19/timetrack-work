@@ -34,10 +34,28 @@ local function commandOk(input, stat)
 	return true
     elseif stat == status.TIMEADDED and ( input == "d" or input == "c" ) then
 	return true
-    elseif input == "p" then
+    elseif input == "p" or input == "x" then
 	return true
     end
     return false
+end
+
+local function getTodayFileName()
+    local date = os.date("*t")
+    local fName = string.sub(date.year, -2)
+
+    if date.month < 10 then
+	fName = fName..".0"..date.month
+    else
+	fName = fName.."."..date.month
+    end
+
+    if date.day < 10 then
+	fName = fName..".0"..date.day..".txt"
+    else
+	fName = fName.."."..date.day..".txt"
+    end
+    return fName
 end
 
 local function processCommand(input, content)
@@ -50,6 +68,8 @@ local function processCommand(input, content)
     --hidden functions
     elseif input == "p" then
 	print(content)
+    elseif input == "x" then
+	fh.write(content, getTodayFileName())
     end
     return content
 end
